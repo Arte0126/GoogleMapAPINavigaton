@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "7884a65c6c251088c95eae70acd9adfd08fa7c68"
+      }
+    },
+    {
+      "identity" : "polyline",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/raphaelmor/Polyline.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "353f80378dcd8f17eefe8550090c6b1ae3c9da23"
+      }
+    }
+  ],
+  "version" : 2
+}

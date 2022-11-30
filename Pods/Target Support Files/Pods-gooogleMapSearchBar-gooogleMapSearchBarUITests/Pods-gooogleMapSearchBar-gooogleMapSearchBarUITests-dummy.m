@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_gooogleMapSearchBar_gooogleMapSearchBarUITests : NSObject
+@end
+@implementation PodsDummy_Pods_gooogleMapSearchBar_gooogleMapSearchBarUITests
+@end
