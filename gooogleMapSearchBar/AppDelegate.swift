@@ -13,6 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let locationManager = CLLocationManager()
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         locationManager.requestWhenInUseAuthorization()
+//        GMSServices.provideAPIKey("\(GoogleMapApiKey().googleMapKey)")
         GMSServices.provideAPIKey("AIzaSyD7s_vuzTnF98ySARcUU9ry2O2sc_GjVB4")
         // Override point for customization after application launch.
         return true

@@ -7,6 +7,7 @@
 import SwiftyJSON
 import Alamofire
 import Foundation
+
 class GoogleMapM<T:Codable> {
     func textSearchDataParser(keyWord:String,lat:Double,lng:Double,action: @escaping (T) -> ()){
         var searchResultList:[String] = []
@@ -41,17 +42,13 @@ class GoogleMapM<T:Codable> {
                 print("error")
                 return
             }
-//            print(routesData)
-//            self?.NavigationParser(routesData:routesData)
             let routeOverviewPolyline = routesData[0]["overview_polyline"].dictionary
             let polylinePoint = routeOverviewPolyline?["points"]?.stringValue
-//          let polylinePoint = routeOverviewPolyline!["points"]?.stringValue
             routesData[0]["legs"][0]["steps"].arrayValue.forEach ({
                 stepsData in
                 let pointsData = stepsData["polyline"]["points"].stringValue
                 pointsDataList.append(pointsData)
             })
-//            print(pointsDataList)
             action(MapRouteData.init(points: pointsDataList,polylinePoint: polylinePoint ?? "") as! T)
         }
     }

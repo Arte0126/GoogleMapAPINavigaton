@@ -18,7 +18,10 @@
 		CA0DB70529248CA600C255F8 /* GoogleMapM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0DB70429248CA600C255F8 /* GoogleMapM.swift */; };
 		CA2D25AC2925C79F0069A120 /* Polyline in Frameworks */ = {isa = PBXBuildFile; productRef = CA2D25AB2925C79F0069A120 /* Polyline */; };
 		CA2D25AF2925E0960069A120 /* NavWorldSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2D25AE2925E0960069A120 /* NavWorldSplit.swift */; };
-		CA2D25B129272EBA0069A120 /* GoogleMapV.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2D25B029272EBA0069A120 /* GoogleMapV.swift */; };
+		CA414FC32935D5E800A3A6E9 /* EnumState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA414FC22935D5E800A3A6E9 /* EnumState.swift */; };
+		CA63C490292F0C5B00C30DF0 /* MyToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63C48F292F0C5B00C30DF0 /* MyToastView.swift */; };
+		CA63C492292F208C00C30DF0 /* InertiaPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63C491292F208C00C30DF0 /* InertiaPoint.swift */; };
+		CA765923293098AE00A1D99D /* InertiTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA765922293098AE00A1D99D /* InertiTimer.swift */; };
 		CA8323B02924BE45007BED74 /* GoogleMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA8323AF2924BE45007BED74 /* GoogleMapVM.swift */; };
 		CAA7C0462924629800E92608 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C0452924629800E92608 /* AppDelegate.swift */; };
 		CAA7C0482924629800E92608 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C0472924629800E92608 /* SceneDelegate.swift */; };
@@ -29,6 +32,8 @@
 		CAA7C05D2924629900E92608 /* gooogleMapSearchBarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C05C2924629900E92608 /* gooogleMapSearchBarTests.swift */; };
 		CAA7C0672924629900E92608 /* gooogleMapSearchBarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C0662924629900E92608 /* gooogleMapSearchBarUITests.swift */; };
 		CAA7C0692924629900E92608 /* gooogleMapSearchBarUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C0682924629900E92608 /* gooogleMapSearchBarUITestsLaunchTests.swift */; };
+		CAC41493292E2579003878DF /* MySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC41492292E2579003878DF /* MySearchController.swift */; };
+		CAC41495292E263D003878DF /* MyMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC41494292E263D003878DF /* MyMapView.swift */; };
 		F8DDA56F8576CC17FD552BC9 /* Pods_gooogleMapSearchBarTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49B97B7B07D2F606BFE6C32 /* Pods_gooogleMapSearchBarTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -65,7 +70,10 @@
 		CA0DB70129248B3800C255F8 /* GoogleMapStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapStruct.swift; sourceTree = "<group>"; };
 		CA0DB70429248CA600C255F8 /* GoogleMapM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapM.swift; sourceTree = "<group>"; };
 		CA2D25AE2925E0960069A120 /* NavWorldSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavWorldSplit.swift; sourceTree = "<group>"; };
-		CA2D25B029272EBA0069A120 /* GoogleMapV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapV.swift; sourceTree = "<group>"; };
+		CA414FC22935D5E800A3A6E9 /* EnumState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumState.swift; sourceTree = "<group>"; };
+		CA63C48F292F0C5B00C30DF0 /* MyToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyToastView.swift; sourceTree = "<group>"; };
+		CA63C491292F208C00C30DF0 /* InertiaPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InertiaPoint.swift; sourceTree = "<group>"; };
+		CA765922293098AE00A1D99D /* InertiTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InertiTimer.swift; sourceTree = "<group>"; };
 		CA8323AF2924BE45007BED74 /* GoogleMapVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapVM.swift; sourceTree = "<group>"; };
 		CAA7C0422924629800E92608 /* GoogleMapAPINavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoogleMapAPINavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA7C0452924629800E92608 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +88,8 @@
 		CAA7C0622924629900E92608 /* GoogleMapAPINavigationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GoogleMapAPINavigationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA7C0662924629900E92608 /* gooogleMapSearchBarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gooogleMapSearchBarUITests.swift; sourceTree = "<group>"; };
 		CAA7C0682924629900E92608 /* gooogleMapSearchBarUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gooogleMapSearchBarUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CAC41492292E2579003878DF /* MySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySearchController.swift; sourceTree = "<group>"; };
+		CAC41494292E263D003878DF /* MyMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMapView.swift; sourceTree = "<group>"; };
 		D49B97B7B07D2F606BFE6C32 /* Pods_gooogleMapSearchBarTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_gooogleMapSearchBarTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -139,7 +149,9 @@
 		CA023CE92924694500F466D0 /* view */ = {
 			isa = PBXGroup;
 			children = (
-				CA2D25B029272EBA0069A120 /* GoogleMapV.swift */,
+				CAC41492292E2579003878DF /* MySearchController.swift */,
+				CAC41494292E263D003878DF /* MyMapView.swift */,
+				CA63C48F292F0C5B00C30DF0 /* MyToastView.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -176,6 +188,9 @@
 			isa = PBXGroup;
 			children = (
 				CA8323AF2924BE45007BED74 /* GoogleMapVM.swift */,
+				CA63C491292F208C00C30DF0 /* InertiaPoint.swift */,
+				CA765922293098AE00A1D99D /* InertiTimer.swift */,
+				CA414FC22935D5E800A3A6E9 /* EnumState.swift */,
 			);
 			path = "view models";
 			sourceTree = "<group>";
@@ -529,10 +544,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA2D25B129272EBA0069A120 /* GoogleMapV.swift in Sources */,
+				CA414FC32935D5E800A3A6E9 /* EnumState.swift in Sources */,
+				CAC41493292E2579003878DF /* MySearchController.swift in Sources */,
+				CA63C490292F0C5B00C30DF0 /* MyToastView.swift in Sources */,
+				CA63C492292F208C00C30DF0 /* InertiaPoint.swift in Sources */,
 				CA0DB6F82924845000C255F8 /* GoogleMapApi.swift in Sources */,
 				CA0DB6F5292481FF00C255F8 /* GoogleMapC.swift in Sources */,
 				CAA7C04A2924629800E92608 /* ViewController.swift in Sources */,
+				CAC41495292E263D003878DF /* MyMapView.swift in Sources */,
 				CAA7C0462924629800E92608 /* AppDelegate.swift in Sources */,
 				CA8323B02924BE45007BED74 /* GoogleMapVM.swift in Sources */,
 				CAA7C0482924629800E92608 /* SceneDelegate.swift in Sources */,
@@ -541,6 +560,7 @@
 				CA0DB70529248CA600C255F8 /* GoogleMapM.swift in Sources */,
 				CA0DB6FD2924877600C255F8 /* GoogleMapApiUrl.swift in Sources */,
 				CA2D25AF2925E0960069A120 /* NavWorldSplit.swift in Sources */,
+				CA765923293098AE00A1D99D /* InertiTimer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,7 +742,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = gooogleMapSearchBar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GoogleMapAPINavigation;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "是否允許App取得現在位置";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "是否允許此App取得您的所在位置";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "是否允許此App取得您的所在位置";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -753,7 +774,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = gooogleMapSearchBar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GoogleMapAPINavigation;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "是否允許App取得現在位置";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "是否允許此App取得您的所在位置";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "是否允許此App取得您的所在位置";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

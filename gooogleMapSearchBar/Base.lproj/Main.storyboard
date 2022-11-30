@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zaH-kw-7Ry">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zaH-kw-7Ry">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,15 +12,54 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="gooogleMapSearchBar" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="GoogleMapV" customModule="gooogleMapSearchBar" customModuleProvider="target">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="GoogleMapAPINavigation" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="GoogleMapV" customModule="GoogleMapAPINavigation" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ri-W7-Xea" customClass="GoogleMapV" customModule="gooogleMapSearchBar" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3ri-W7-Xea" customClass="GoogleMapV" customModule="GoogleMapAPINavigation" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kQm-lj-hwB">
+                                <rect key="frame" x="147" y="470" width="80" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="gray" indentationWidth="10" rowHeight="120" translatesAutoresizingMaskIntoConstraints="NO" id="xPl-cS-l2D">
+                                <rect key="frame" x="0.0" y="29" width="375" height="120"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xPl-cS-l2D" id="1bE-5B-z2v">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8B4-vr-vgP">
+                                            <rect key="frame" x="16" y="19" width="65" height="94"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="載入中．．．" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aIU-C1-B50">
+                                            <rect key="frame" x="127" y="15" width="195" height="38"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="載入中．．．" lineBreakMode="characterWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mis-d0-yQE">
+                                            <rect key="frame" x="89" y="45" width="281" height="46"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="載入中．．．" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Xf-dk-8d6">
+                                            <rect key="frame" x="89" y="92" width="281" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VFo-7K-AiZ" userLabel="deleteMaker">
                                 <rect key="frame" x="10" y="591" width="50" height="50"/>
                                 <constraints>
@@ -28,6 +68,9 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="delete.left.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="deleteButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DGI-Zm-6dB"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dgX-7e-rVP">
                                 <rect key="frame" x="10" y="400" width="50" height="50"/>
@@ -37,6 +80,9 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="repeat" catalog="system"/>
+                                <connections>
+                                    <action selector="reSetButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZUp-iW-bd7"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uzx-Uy-HNb">
                                 <rect key="frame" x="10" y="526" width="50" height="50"/>
@@ -46,6 +92,9 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="location.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="navStartButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LLy-2b-x4a"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4CW-Me-S43">
                                 <rect key="frame" x="10" y="463" width="50" height="50"/>
@@ -55,6 +104,9 @@
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="point.topleft.down.curvedto.point.bottomright.up" catalog="system"/>
+                                <connections>
+                                    <action selector="routerButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UiE-WR-0Ij"/>
+                                </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="vmf-Ss-qaV">
                                 <rect key="frame" x="0.0" y="44" width="375" height="229"/>
@@ -65,7 +117,7 @@
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="glv-UT-YVG" detailTextLabel="tJl-Hr-tT4" style="IBUITableViewCellStyleSubtitle" id="LH0-rT-Awd">
-                                        <rect key="frame" x="0.0" y="44.5" width="375" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="50" width="375" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LH0-rT-Awd" id="u3i-28-Nuw">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -116,13 +168,23 @@
                     </view>
                     <navigationItem key="navigationItem" id="BYC-7K-sjh"/>
                     <connections>
+                        <outlet property="arrowImage" destination="kQm-lj-hwB" id="cwQ-8t-6kR"/>
+                        <outlet property="deleteButton" destination="VFo-7K-AiZ" id="gbt-K6-Euw"/>
                         <outlet property="mapView" destination="3ri-W7-Xea" id="JV1-Y8-RZY"/>
+                        <outlet property="navRemindCell" destination="xPl-cS-l2D" id="Myy-Bw-d4a"/>
+                        <outlet property="navRemindContentLab" destination="mis-d0-yQE" id="q96-pg-NwH"/>
+                        <outlet property="navRemindDistanceLab" destination="3Xf-dk-8d6" id="ZJc-nJ-KKl"/>
+                        <outlet property="navRemindImage" destination="8B4-vr-vgP" id="23k-Eo-Lhx"/>
+                        <outlet property="navRemindTIttleLab" destination="aIU-C1-B50" id="wz4-9U-pIU"/>
+                        <outlet property="navStartButton" destination="uzx-Uy-HNb" id="W9S-Je-mUR"/>
+                        <outlet property="reSetButton" destination="dgX-7e-rVP" id="HgP-Lr-YuI"/>
+                        <outlet property="routerButton" destination="4CW-Me-S43" id="vzP-YW-Bpd"/>
                         <outlet property="tableView" destination="vmf-Ss-qaV" id="J0L-w3-JUt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1074" y="-55"/>
+            <point key="canvasLocation" x="1072.8" y="-55.322338830584712"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Xte-vW-pLa">
@@ -148,9 +210,9 @@
         <segue reference="7zD-Rs-2OF"/>
     </inferredMetricsTieBreakers>
     <resources>
-        <image name="delete.left.fill" catalog="system" width="128" height="104"/>
-        <image name="location.fill" catalog="system" width="128" height="121"/>
-        <image name="point.topleft.down.curvedto.point.bottomright.up" catalog="system" width="121" height="128"/>
+        <image name="delete.left.fill" catalog="system" width="128" height="102"/>
+        <image name="location.fill" catalog="system" width="128" height="119"/>
+        <image name="point.topleft.down.curvedto.point.bottomright.up" catalog="system" width="119" height="128"/>
         <image name="repeat" catalog="system" width="128" height="98"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
