@@ -76,7 +76,7 @@ class InertiaPoint {
             }
         }
         let polylineSmallPointObj = (polylineSmallPointLatList,polylineSmallPointLngList)
-        print(polylineSmallPointObj)
+//        print(polylineSmallPointObj)
         return polylineSmallPointObj
     }
 }

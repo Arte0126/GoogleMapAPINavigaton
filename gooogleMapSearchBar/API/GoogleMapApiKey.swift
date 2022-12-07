@@ -9,6 +9,6 @@ import Foundation
 public class GoogleMapApiKey {
     public final var googleMapKey:String
     init() {
-        googleMapKey = "自行申請KEY"
+        googleMapKey = "AIzaSyBiflQ57CcbDWXozIQdCLT8Ue5xMBwe8FY"
     }
 }

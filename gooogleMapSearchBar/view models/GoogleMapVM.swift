@@ -14,8 +14,6 @@ class GoogleMapVM {
     var navManeuverList:[String] = []
     var navStepsLatList:[Double] = []
     var navStepsLngList:[Double] = []
-    var snapLat:Double = 0
-    var snapLng:Double = 0
     func radian(d:Double) -> Double {
         return d * Double.pi/180.0
     }
@@ -84,11 +82,5 @@ class GoogleMapVM {
 //            }
 //        }
 //    }
-    func snapToRoadsDataGet(myLat:Double,myLng:Double) {
-        GoogleMapM<snapToRoadsData>().snapToRoadsParser(myLat: myLat, myLng: myLng) { [weak self] snapToRoadsDataResult in
-            self?.snapLat = snapToRoadsDataResult.latitude
-            self?.snapLng = snapToRoadsDataResult.longitude
-        }
-    }
 }
 

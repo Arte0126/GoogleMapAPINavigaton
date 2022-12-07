@@ -23,6 +23,7 @@
 		CA63C492292F208C00C30DF0 /* InertiaPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63C491292F208C00C30DF0 /* InertiaPoint.swift */; };
 		CA765923293098AE00A1D99D /* InertiTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA765922293098AE00A1D99D /* InertiTimer.swift */; };
 		CA8323B02924BE45007BED74 /* GoogleMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA8323AF2924BE45007BED74 /* GoogleMapVM.swift */; };
+		CA963B1D293F301000EFD8CA /* YawAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA963B1C293F301000EFD8CA /* YawAlgorithm.swift */; };
 		CAA7C0462924629800E92608 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C0452924629800E92608 /* AppDelegate.swift */; };
 		CAA7C0482924629800E92608 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C0472924629800E92608 /* SceneDelegate.swift */; };
 		CAA7C04A2924629800E92608 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA7C0492924629800E92608 /* ViewController.swift */; };
@@ -75,6 +76,7 @@
 		CA63C491292F208C00C30DF0 /* InertiaPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InertiaPoint.swift; sourceTree = "<group>"; };
 		CA765922293098AE00A1D99D /* InertiTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InertiTimer.swift; sourceTree = "<group>"; };
 		CA8323AF2924BE45007BED74 /* GoogleMapVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapVM.swift; sourceTree = "<group>"; };
+		CA963B1C293F301000EFD8CA /* YawAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YawAlgorithm.swift; sourceTree = "<group>"; };
 		CAA7C0422924629800E92608 /* GoogleMapAPINavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GoogleMapAPINavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAA7C0452924629800E92608 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CAA7C0472924629800E92608 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				CA63C491292F208C00C30DF0 /* InertiaPoint.swift */,
 				CA765922293098AE00A1D99D /* InertiTimer.swift */,
 				CA414FC22935D5E800A3A6E9 /* EnumState.swift */,
+				CA963B1C293F301000EFD8CA /* YawAlgorithm.swift */,
 			);
 			path = "view models";
 			sourceTree = "<group>";
@@ -561,6 +564,7 @@
 				CA0DB6FD2924877600C255F8 /* GoogleMapApiUrl.swift in Sources */,
 				CA2D25AF2925E0960069A120 /* NavWorldSplit.swift in Sources */,
 				CA765923293098AE00A1D99D /* InertiTimer.swift in Sources */,
+				CA963B1D293F301000EFD8CA /* YawAlgorithm.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
