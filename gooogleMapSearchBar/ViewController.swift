@@ -132,10 +132,11 @@ class ViewController: UIViewController {
             viewState = State.gps
             deleteButton.isEnabled = true
             reSetButton.isHidden = true
-            navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
-            navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
-            navPolylineCount = 0 // 第幾段距離
-            navStepCount = 0
+//            navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
+//            navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
+//            navPolylineCount = 0 // 第幾段距離
+//            navStepCount = 0
+            navigationCancel()
         default: break
         }
     }
@@ -180,6 +181,13 @@ class ViewController: UIViewController {
         mapViewForUI.clear()
         mapClickAnnLatVal = 0
         mapClickAnnLngVal = 0
+    }
+    func navigationCancel() {
+        mapViewForUI.clear()
+        navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
+        navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
+        navPolylineCount = 0 // 第幾段距離
+        navStepCount = 0
     }
     func navPolyLineProcess() {
         polylinePointAngleList = InertiaPoint().getpolylineListForAngle(polylinePoint: polylinePoint)
@@ -305,11 +313,12 @@ class ViewController: UIViewController {
     func yawDecide() {
         var state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, GpsLatVal, GpsLngVal)
          if state == true {
-             mapViewForUI.clear()
-             navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
-             navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
-             navPolylineCount = 0 // 第幾段距離
-             navStepCount = 0
+//             mapViewForUI.clear()
+//             navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
+//             navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
+//             navPolylineCount = 0 // 第幾段距離
+//             navStepCount = 0
+             navigationCancel()
 //             mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
              mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
          }
@@ -376,7 +385,7 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         GpsSpeedVal = speed
 //        snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)
         if viewState == State.navigation {
-            yawDecide()
+//            yawDecide()
         }
         
     }
