@@ -14,7 +14,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var routerButton: UIButton!
     @IBOutlet weak var reSetButton: UIButton!
+    @IBOutlet weak var gpsSpeedLab: UILabel!
     @IBOutlet weak var navRemindCell: UITableViewCell!
+    @IBOutlet weak var gpsRemindTittleLab: UILabel!
     @IBOutlet weak var navRemindImage: UIImageView!//導航－路標
     @IBOutlet weak var navRemindTIttleLab: UILabel!//導航－路名
     @IBOutlet weak var navRemindContentLab: UILabel!//導航－內容
@@ -70,6 +72,10 @@ class ViewController: UIViewController {
         if viewState == State.gps{
             reSetButton.isHidden = true
         }
+        gpsRemindTittleLab.layer.masksToBounds = true
+        gpsRemindTittleLab.layer.cornerRadius = 10
+        gpsSpeedLab.layer.masksToBounds = true
+        gpsSpeedLab.layer.cornerRadius = 10
         navRemindCell.isHidden = true
         arrowImage.image = UIImage(named: "arrow")
 //        arrowImage.isHidden = true
@@ -81,9 +87,6 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         gpsInertiaStart()
     }
-    
-    
-    
     
     //畫面顯示控制
     func searchControllerSet() {
@@ -137,11 +140,13 @@ class ViewController: UIViewController {
     }
     func mapViewReSet() {
         self.timerForNav.invalidate()
+        gpsRemindTittleLab.isHidden = false
         self.animateCamerSet(lat:GpsLatVal, lng:GpsLngVal, zoom:15, angle:0, Bear:0)
         mapViewForUI.clear()
         mapClickAnnLatVal = 0
         mapClickAnnLngVal = 0
         gpsInertiaStart()
+        
     }
     func navigationCancel() {
         mapViewForUI.clear()
@@ -185,6 +190,7 @@ class ViewController: UIViewController {
     @IBAction func navStartButton(_ sender: Any) {
         switch viewState {
         case State.router:
+            gpsRemindTittleLab.isHidden = true
             searchController.searchBar.isHidden = true // 關掉搜尋ＵＩ
             viewState = State.navigation
             deleteButton.isEnabled = false // 刪除座標按鈕失效
@@ -232,9 +238,9 @@ class ViewController: UIViewController {
         }
     }
     func navigationInertiForNextPoint(amount:Int){
-        if viewState == State.navigation {
+//        if viewState == State.navigation {
             stepCalculate()
-        }
+//        }
         
         if navTimeCountForAngle > Int(polylinePointDistanceList[navPolylineCount]) { //
             navPolylineCount = navPolylineCount+1
@@ -283,7 +289,11 @@ class ViewController: UIViewController {
     func getNavStepsTittleList() {
         if navStepCount > 0 {
             navRemindTIttleLab.text = navStepsTittleList[navStepCount-1]
-        } else { navRemindTIttleLab.text = navStepsTittleList[navStepCount] }
+            gpsRemindTittleLab.text = "目前位於:\(navStepsTittleList[navStepCount-1])"
+        } else {
+            navRemindTIttleLab.text = navStepsTittleList[navStepCount]
+            gpsRemindTittleLab.text = "目前位於:\(navStepsTittleList[navStepCount])"
+        }
     }
     func yawDecide() { //偏航
         let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
@@ -313,8 +323,10 @@ class ViewController: UIViewController {
         arrowImage.isHidden = false
         angleByPoint = angleByPoint(lat: GpsLatVal, lng: GpsLngVal)
         let predictPoint =  GoogleMapVM().getNewPosition(lastAngle: angleByPoint, mylat: GpsLatVal, mylng: GpsLngVal, Distnace: 7000)
-        gpsInteriaDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: predictPoint.0, annLng: predictPoint.1)
-        
+        let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
+        let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
+        gpsInteriaDataGet(myLat: lat, myLng: lng, annLat: predictPoint.0, annLng: predictPoint.1)
+        NavigationDataGet(myLat: lat, myLng: lng, annLat: predictPoint.0, annLng: predictPoint.1)
     }
     func stopGpsInertia() {
         self.timerForNav.invalidate()
@@ -440,9 +452,9 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         GpsLngVal = userLocation.coordinate.longitude
         var speed: CLLocationSpeedAccuracy = CLLocationSpeed()
         speed = mapLocationManager.location?.speed ?? 0 // 公尺／秒
-        speed = 10
+//        speed = 10
         GpsSpeedVal = speed
-
+        gpsSpeedLab.text = "\(GpsSpeedVal)m/s"
         if viewState == State.navigation { //偏航判斷
 //            snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)//snap
             yawDecide()

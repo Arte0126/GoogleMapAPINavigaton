@@ -108,6 +108,22 @@
                                     <action selector="routerButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UiE-WR-0Ij"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="目前位置" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gGJ-vc-fDg">
+                                <rect key="frame" x="11" y="110" width="155" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="目前速度" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZlY-Hu-DHg">
+                                <rect key="frame" x="11" y="150" width="70" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="vmf-Ss-qaV">
                                 <rect key="frame" x="0.0" y="44" width="375" height="229"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -170,6 +186,8 @@
                     <connections>
                         <outlet property="arrowImage" destination="kQm-lj-hwB" id="cwQ-8t-6kR"/>
                         <outlet property="deleteButton" destination="VFo-7K-AiZ" id="gbt-K6-Euw"/>
+                        <outlet property="gpsRemindTittleLab" destination="gGJ-vc-fDg" id="B0K-hv-ogS"/>
+                        <outlet property="gpsSpeedLab" destination="ZlY-Hu-DHg" id="zpo-EH-8lA"/>
                         <outlet property="mapView" destination="3ri-W7-Xea" id="JV1-Y8-RZY"/>
                         <outlet property="navRemindCell" destination="xPl-cS-l2D" id="Myy-Bw-d4a"/>
                         <outlet property="navRemindContentLab" destination="mis-d0-yQE" id="q96-pg-NwH"/>
