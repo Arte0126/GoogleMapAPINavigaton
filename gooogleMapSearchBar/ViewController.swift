@@ -60,6 +60,11 @@ class ViewController: UIViewController {
     var snapLat:Double = 0
     var snapLng:Double = 0
     var viewState = State.gps
+    
+    var myLatList:[Double] = []
+    var myLngList:[Double] = []
+    var angleByPoint:Double = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if viewState == State.gps{
@@ -67,12 +72,20 @@ class ViewController: UIViewController {
         }
         navRemindCell.isHidden = true
         arrowImage.image = UIImage(named: "arrow")
-        arrowImage.isHidden = true
+//        arrowImage.isHidden = true
         searchBarTableViewSet()
         searchControllerSet()
         mapViewSet()
         mapLocationSet()
     }
+    override func viewDidAppear(_ animated: Bool) {
+        gpsInertiaStart()
+    }
+    
+    
+    
+    
+    //畫面顯示控制
     func searchControllerSet() {
         searchController.searchBar.sizeToFit()
         navigationItem.titleView = searchController.searchBar
@@ -90,6 +103,16 @@ class ViewController: UIViewController {
         mapViewForUI.delegate = self
         mapViewForUI.isMyLocationEnabled = true
         mapView.addSubview(mapViewForUI)
+    }
+    func mapLocationSet() {
+        if CLLocationManager.headingAvailable() {
+            mapLocationManager.headingFilter = 5
+            mapLocationManager.startUpdatingHeading()
+        }
+        mapLocationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        mapLocationManager.delegate = self
+        mapLocationManager.requestWhenInUseAuthorization()
+        mapLocationManager.startUpdatingLocation()
     }
     func cameraSet(lat:Double,lng:Double,zoom:Double,angle:Double) {
         let camera = GMSCameraPosition(latitude: lat, longitude: lng, zoom: Float(zoom))
@@ -112,20 +135,26 @@ class ViewController: UIViewController {
         marker.position = CLLocationCoordinate2D(latitude: lat, longitude: lng)
         marker.map = self.mapViewForUI
     }
-    func mapLocationSet() {
-        if CLLocationManager.headingAvailable() {
-            mapLocationManager.headingFilter = 5
-            mapLocationManager.startUpdatingHeading()
-        }
-        mapLocationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        mapLocationManager.delegate = self
-        mapLocationManager.requestWhenInUseAuthorization()
-        mapLocationManager.startUpdatingLocation()
+    func mapViewReSet() {
+        self.timerForNav.invalidate()
+        self.animateCamerSet(lat:GpsLatVal, lng:GpsLngVal, zoom:15, angle:0, Bear:0)
+        mapViewForUI.clear()
+        mapClickAnnLatVal = 0
+        mapClickAnnLngVal = 0
+        gpsInertiaStart()
     }
+    func navigationCancel() {
+        mapViewForUI.clear()
+        navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
+        navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
+        navPolylineCount = 0 // 第幾段距離
+        navStepCount = 0
+    }
+    
+    //元件控制
     @IBAction func reSetButton(_ sender: Any) {
         switch viewState {
         case State.navigation:
-            mapViewReSet()
             searchController.searchBar.isHidden = false // 開啟搜尋ＵＩ
             navRemindCell.isHidden = true //關閉導航提示
             arrowImage.isHidden = true //導航icon關閉
@@ -133,6 +162,7 @@ class ViewController: UIViewController {
             deleteButton.isEnabled = true
             reSetButton.isHidden = true
             navigationCancel()
+            mapViewReSet()
         default: break
         }
     }
@@ -144,6 +174,7 @@ class ViewController: UIViewController {
             UIApplication.shared.keyWindow?.showToast(text:"導航已經開始，無法規劃路徑")
         case State.gps:
             if mapClickAnnLatVal != 0 {
+                navigationCancel()
                 mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
                 viewState = State.router
             }else {
@@ -169,22 +200,11 @@ class ViewController: UIViewController {
         }
     }
     @IBAction func deleteButton(_ sender: Any) {
+        navigationCancel()
         mapViewReSet()
     }
-    func mapViewReSet() {
-        self.timerForNav.invalidate()
-        self.animateCamerSet(lat:GpsLatVal, lng:GpsLngVal, zoom:15, angle:0, Bear:0)
-        mapViewForUI.clear()
-        mapClickAnnLatVal = 0
-        mapClickAnnLngVal = 0
-    }
-    func navigationCancel() {
-        mapViewForUI.clear()
-        navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
-        navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
-        navPolylineCount = 0 // 第幾段距離
-        navStepCount = 0
-    }
+
+    //慣行導航func
     func navPolyLineProcess() {
         polylinePointAngleList = InertiaPoint().getpolylineListForAngle(polylinePoint: polylinePoint)
         polylinePointDistanceList = InertiaPoint().getPolylineListForDistance(polylinePoint: polylinePoint)
@@ -193,6 +213,116 @@ class ViewController: UIViewController {
         polylineSmallPointLngList = polylineSmallPoint.1
         navigationInertiForStart()
     }
+    func navigationInertiForStart() {
+            self.timerForNav.invalidate()
+        var coefficient:Double = 0.9
+            speedForAmount = 1 / GpsSpeedVal
+            if GpsSpeedVal >= 0 {
+            self.timerForNav = Timer.scheduledTimer(timeInterval: speedForAmount * coefficient, target: self, selector: #selector(self.navigationInertiForCountSet), userInfo: nil, repeats: true)
+            }
+    }
+    @objc func navigationInertiForCountSet() {
+        if  GpsSpeedVal >= 0 {
+            navTimeCountForSmallPoint = navTimeCountForSmallPoint+1
+            navTimeCountForAngle = navTimeCountForAngle + 1
+            let amount = Int(1 * navTimeCountForSmallPoint)
+            if polylinePointDistanceList.count >  0 {
+                navigationInertiForNextPoint(amount: amount)
+            }
+        }
+    }
+    func navigationInertiForNextPoint(amount:Int){
+        if viewState == State.navigation {
+            stepCalculate()
+        }
+        
+        if navTimeCountForAngle > Int(polylinePointDistanceList[navPolylineCount]) { //
+            navPolylineCount = navPolylineCount+1
+            navTimeCountForAngle = 0
+        }
+//        print(polylineSmallPointLatList)
+        if polylineSmallPointLatList.count > amount {
+            newMyLatValFromInertia = polylineSmallPointLatList[amount]
+            newMyLngValFromInertia = polylineSmallPointLngList[amount]
+            let cameraButton = GoogleMapVM().cameraPositionToBottom(polylinePointAngleList[navPolylineCount],newMyLatValFromInertia, newMyLngValFromInertia)
+            animateCamerSet(lat:cameraButton.0, lng: cameraButton.1, zoom:19.5, angle:80, Bear: polylinePointAngleList[navPolylineCount])
+        }
+    }
+    func stepCalculate() {
+        navStepToInertiDistanceVal = GoogleMapVM().getDistance(lat1: newMyLatValFromInertia, lng1: newMyLngValFromInertia, lat2: navStepsLatList[navStepCount], lng2: navStepsLngList[navStepCount])
+        if navStepToInertiDistanceVal < 1 {
+            navStepCount = navStepCount + 1
+        }
+        navRemindDistanceLab.text = "剩餘:\( String(format: "%.1f", navStepToInertiDistanceVal))公尺"
+        getNavManeuverList()
+        getNavStepsRemindList()
+        getNavStepsTittleList()
+    }
+    func getNavManeuverList() {
+        switch navManeuverList[navStepCount]{
+            case "turn-right":
+                navRemindImage.image = UIImage(systemName:"arrowshape.turn.up.forward.fill")
+            case "keep-right":
+                navRemindImage.image = UIImage(systemName:"arrow.up.right")
+            case "turn-left":
+                navRemindImage.image = UIImage(systemName:"arrowshape.turn.up.backward.fill")
+            case "keep-left":
+                navRemindImage.image = UIImage(systemName:"arrow.up.left")
+            default:
+                navRemindImage.image = UIImage(systemName:"location.north.fill")
+        }
+    }
+    func getNavStepsRemindList() {
+        if navStepToInertiDistanceVal <= 200 {
+            navRemindContentLab.text = navStepsRemindList[navStepCount]
+        } else {
+            navRemindContentLab.text = "請繼續直行"
+            navRemindImage.image = UIImage(systemName:"location.north.fill")
+        }
+    }
+    func getNavStepsTittleList() {
+        if navStepCount > 0 {
+            navRemindTIttleLab.text = navStepsTittleList[navStepCount-1]
+        } else { navRemindTIttleLab.text = navStepsTittleList[navStepCount] }
+    }
+    func yawDecide() { //偏航
+        let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
+        let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
+        print(lat,lng)
+        
+        var state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, lat, lng)//GPSLocation 可能要改回 Snap 看測試狀況
+         if state == true {
+             navigationCancel()
+             mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
+         }
+    }
+    
+    //慣性GPS func
+    func angleByPoint(lat:Double, lng:Double) -> (Double) {
+        var angleByPoint:Double = 0
+        myLatList.append(snapLat)
+        myLngList.append(snapLng)
+            if myLatList.count > 2 { //陣列長度超過2就清掉[0]避免越來越大，[0]表示上次[1]表示這次
+                myLatList.remove(at: 0)
+                myLngList.remove(at: 0)
+                angleByPoint = GoogleMapVM().getPointsAngle(lat1: myLatList[0], lng1: myLngList[0], lat2: myLatList[1], lng2: myLngList[1])
+            }
+        return angleByPoint
+    }
+    func gpsInertiaStart() {
+        arrowImage.isHidden = false
+        angleByPoint = angleByPoint(lat: GpsLatVal, lng: GpsLngVal)
+        let predictPoint =  GoogleMapVM().getNewPosition(lastAngle: angleByPoint, mylat: GpsLatVal, mylng: GpsLngVal, Distnace: 7000)
+        gpsInteriaDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: predictPoint.0, annLng: predictPoint.1)
+        
+    }
+    func stopGpsInertia() {
+        self.timerForNav.invalidate()
+        mapViewForUI.clear()
+        arrowImage.isHidden = true
+    }
+    
+    //Closure 呼叫API
     func textSearchDataGet(keyWord: String, lat: Double, lng: Double) {
         GoogleMapM<textSearchData>().textSearchDataParser(keyWord: keyWord, lat: lat, lng: lng){
             [weak self] textSearchResult in
@@ -225,6 +355,18 @@ class ViewController: UIViewController {
             }
         }
     }
+    func gpsInteriaDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double) {
+        GoogleMapM<MapRouteData>().mapRouteDataParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
+            [weak self]  mapRouteDataResult in
+            for i in 0...mapRouteDataResult.points.count-1 {
+                self?.path = GMSPath(fromEncodedPath:mapRouteDataResult.points[i])!
+                self?.polyline = GMSPolyline(path: self?.path)
+                self?.polylinePoint = decodePolyline(mapRouteDataResult.polylinePoint)!
+            }
+            self?.navPolyLineProcess()
+        }
+        
+    }
     func NavigationDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double) {
         GoogleMapM<NavigationData>().NavigationParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
             [weak self]  navigationDataResult in
@@ -237,83 +379,7 @@ class ViewController: UIViewController {
             }
         }
     }
-    func navigationInertiForStart() {
-            self.timerForNav.invalidate()
-        var coefficient:Double = 0.9
-            speedForAmount = 1 / GpsSpeedVal
-            if GpsSpeedVal >= 0 {
-            self.timerForNav = Timer.scheduledTimer(timeInterval: speedForAmount * coefficient, target: self, selector: #selector(self.navigationInertiForCountSet), userInfo: nil, repeats: true)
-            }
-    }
-    @objc func navigationInertiForCountSet() {
-        if  GpsSpeedVal >= 0 {
-            navTimeCountForSmallPoint = navTimeCountForSmallPoint+1
-            navTimeCountForAngle = navTimeCountForAngle + 1
-            let amount = Int(1 * navTimeCountForSmallPoint)
-            if polylinePointDistanceList.count >  0 {
-                navigationInertiForNextPoint(amount: amount)
-            }
-        }
-    }
-    func navigationInertiForNextPoint(amount:Int){
-        stepCalculate()
-        if navTimeCountForAngle > Int(polylinePointDistanceList[navPolylineCount]) { //
-            navPolylineCount = navPolylineCount+1
-            navTimeCountForAngle = 0
-        }
-        if polylineSmallPointLatList.count > amount {
-            newMyLatValFromInertia = polylineSmallPointLatList[amount]
-            newMyLngValFromInertia = polylineSmallPointLngList[amount]
-            let cameraButton = GoogleMapVM().cameraPositionToBottom(polylinePointAngleList[navPolylineCount],newMyLatValFromInertia, newMyLngValFromInertia)
-            animateCamerSet(lat:cameraButton.0, lng: cameraButton.1, zoom:19.5, angle:80, Bear: polylinePointAngleList[navPolylineCount])
-        }
-    }
-    func stepCalculate() {
-        navStepToInertiDistanceVal = GoogleMapVM().getDistance(lat1: newMyLatValFromInertia, lng1: newMyLngValFromInertia, lat2: navStepsLatList[navStepCount], lng2: navStepsLngList[navStepCount])
-        if navStepToInertiDistanceVal < 1 {
-            navStepCount = navStepCount + 1
-        }
-        navRemindDistanceLab.text = "剩餘:\( String(format: "%.1f", navStepToInertiDistanceVal))公尺"
-        getNavManeuverList()
-        getNavStepsRemindList()
-        getNavStepsTittleList()
-    }
-    func getNavManeuverList() {
-        switch navManeuverList[navStepCount]{
-            case "turn-right":
-                navRemindImage.image = UIImage(systemName:"arrowshape.turn.up.forward.fill")
-            case "keep-right":
-                navRemindImage.image = UIImage(systemName:"arrow.up.right")
-            case "turn-left":
-                navRemindImage.image = UIImage(systemName:"arrowshape.turn.up.backward.fill")
-            case "keep-left":
-                navRemindImage.image = UIImage(systemName:"arrow.up.left")
-            default:
-                navRemindImage.image = UIImage(systemName:"location.north.fill")
-        }
-//        print(navManeuverList[navStepCount])
-    }
-    func getNavStepsRemindList() {
-        if navStepToInertiDistanceVal <= 200 {
-            navRemindContentLab.text = navStepsRemindList[navStepCount]
-        } else {
-            navRemindContentLab.text = "請繼續直行"
-            navRemindImage.image = UIImage(systemName:"location.north.fill")
-        }
-    }
-    func getNavStepsTittleList() {
-        if navStepCount > 0 {
-            navRemindTIttleLab.text = navStepsTittleList[navStepCount-1]
-        } else { navRemindTIttleLab.text = navStepsTittleList[navStepCount] }
-    }
-    func yawDecide() {
-        var state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, GpsLatVal, GpsLngVal)
-         if state == true {
-             navigationCancel()
-//             mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
-             mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
-         }
-    }
+    
 }
 extension ViewController:UITableViewDelegate,UITableViewDataSource { //搜尋後下拉選單畫面
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -328,6 +394,7 @@ extension ViewController:UITableViewDelegate,UITableViewDataSource { //搜尋後
     }
     internal func tableView(_ tableView:UITableView,trailingSwipeActionsConfigurationForRowAt indexPath:IndexPath)->UISwipeActionsConfiguration?{
         let data = UIContextualAction(style:.normal,title:"新增座標"){(action, view, completionHandler) in
+            self.stopGpsInertia()
             self.mapClickAnnLatVal = self.searchResultLatList[indexPath.row]
             self.mapClickAnnLngVal = self.searchResultLngList[indexPath.row]
             tableView.isHidden = true
@@ -359,6 +426,7 @@ extension ViewController: GMSMapViewDelegate{ //地圖按下觸發
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
     }
     func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+        stopGpsInertia()
         let marker = GMSMarker(position: coordinate)
         mapClickAnnLatVal = coordinate.latitude
         mapClickAnnLngVal = coordinate.longitude
@@ -374,11 +442,14 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         speed = mapLocationManager.location?.speed ?? 0 // 公尺／秒
         speed = 10
         GpsSpeedVal = speed
-//        snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)
-        if viewState == State.navigation {
-//            yawDecide()
+
+        if viewState == State.navigation { //偏航判斷
+//            snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)//snap
+            yawDecide()
         }
-        
+        if viewState == State.gps {
+            
+        }
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
