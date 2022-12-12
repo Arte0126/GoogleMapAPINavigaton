@@ -11,3 +11,18 @@ enum State {
     case router
     case navigation
 }
+enum WidthState {
+    case router
+    case navigation
+}
+class enumClass {
+    func WidthState(value: WidthState) -> CGFloat {
+        switch value {
+        case .router:
+            return 10
+        case .navigation:
+            return 15
+        }
+    }
+}
+

@@ -62,6 +62,7 @@ class ViewController: UIViewController {
     var snapLat:Double = 0
     var snapLng:Double = 0
     var viewState = State.gps
+    var polylineWidth = WidthState.router
     
     var myLatList:[Double] = []
     var myLngList:[Double] = []
@@ -190,6 +191,8 @@ class ViewController: UIViewController {
     @IBAction func navStartButton(_ sender: Any) {
         switch viewState {
         case State.router:
+            polylineWidth = WidthState.navigation
+            mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)//沒再重新呼叫一次沒辦法改變紅線粗度
             gpsRemindTittleLab.isHidden = true
             searchController.searchBar.isHidden = true // 關掉搜尋ＵＩ
             viewState = State.navigation
@@ -201,6 +204,7 @@ class ViewController: UIViewController {
             navPolyLineProcess()
         case State.navigation:
             UIApplication.shared.keyWindow?.showToast(text:"導航已經開始")
+            
         case State.gps:
             UIApplication.shared.keyWindow?.showToast(text:"請先規劃路徑")
         }
@@ -299,14 +303,19 @@ class ViewController: UIViewController {
         let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
         let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
         print(lat,lng)
-        
         var state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, lat, lng)//GPSLocation 可能要改回 Snap 看測試狀況
          if state == true {
              navigationCancel()
-             mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
+             switch viewState {
+             case .gps:gpsInertiaStart()
+             case.navigation:
+                 mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
+             case .router:
+                 return
+             }
+            
          }
     }
-    
     //慣性GPS func
     func angleByPoint(lat:Double, lng:Double) -> (Double) {
         var angleByPoint:Double = 0
@@ -356,7 +365,7 @@ class ViewController: UIViewController {
             for i in 0...mapRouteDataResult.points.count-1 {
                 self?.path = GMSPath(fromEncodedPath:mapRouteDataResult.points[i])!
                 self?.polyline = GMSPolyline(path: self?.path)
-                self?.polyline.strokeWidth = 15
+                self?.polyline.strokeWidth = enumClass().WidthState(value: self!.polylineWidth)
                 self?.polyline.strokeColor = .red
                 self?.polyline.map = self?.mapViewForUI
                 self?.polylinePoint = decodePolyline(mapRouteDataResult.polylinePoint)!
@@ -366,6 +375,7 @@ class ViewController: UIViewController {
                 self?.mapViewForUI.animate(with: camera)
             }
         }
+        print(polylineWidth)
     }
     func gpsInteriaDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double) {
         GoogleMapM<MapRouteData>().mapRouteDataParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
@@ -452,7 +462,7 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         GpsLngVal = userLocation.coordinate.longitude
         var speed: CLLocationSpeedAccuracy = CLLocationSpeed()
         speed = mapLocationManager.location?.speed ?? 0 // 公尺／秒
-//        speed = 10
+        speed = 10
         GpsSpeedVal = speed
         gpsSpeedLab.text = "\(GpsSpeedVal)m/s"
         if viewState == State.navigation { //偏航判斷
@@ -460,7 +470,7 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
             yawDecide()
         }
         if viewState == State.gps {
-            
+            yawDecide()
         }
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
