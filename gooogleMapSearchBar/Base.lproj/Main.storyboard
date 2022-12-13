@@ -124,6 +124,12 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOa-Za-6h8">
+                                <rect key="frame" x="310" y="601" width="51" height="31"/>
+                                <connections>
+                                    <action selector="gpsSwitchButton:" destination="BYZ-38-t0r" eventType="valueChanged" id="Tys-gs-j2d"/>
+                                </connections>
+                            </switch>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="vmf-Ss-qaV">
                                 <rect key="frame" x="0.0" y="44" width="375" height="229"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -171,6 +177,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="4CW-Me-S43" secondAttribute="bottom" constant="154" id="3fR-n7-efr"/>
                             <constraint firstItem="VFo-7K-AiZ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="5av-Oz-fqf"/>
                             <constraint firstItem="vmf-Ss-qaV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Bcj-zZ-s26"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="FOa-Za-6h8" secondAttribute="bottom" constant="35" id="CzN-Pf-Q7f"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="dgX-7e-rVP" secondAttribute="bottom" constant="217" id="FHe-Ns-EqG"/>
                             <constraint firstItem="vmf-Ss-qaV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="HZA-1a-aiH"/>
                             <constraint firstItem="3ri-W7-Xea" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="MPD-zh-IsJ"/>
@@ -178,6 +185,7 @@
                             <constraint firstItem="3ri-W7-Xea" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="fJ5-dR-rHs"/>
                             <constraint firstItem="dgX-7e-rVP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="j48-9C-X8S"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="VFo-7K-AiZ" secondAttribute="bottom" constant="26" id="mZD-iq-ohh"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FOa-Za-6h8" secondAttribute="trailing" constant="16" id="oI2-yi-c8X"/>
                             <constraint firstItem="3ri-W7-Xea" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="trA-Jc-hj2"/>
                             <constraint firstItem="4CW-Me-S43" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="wGD-bL-McN"/>
                         </constraints>
@@ -188,6 +196,7 @@
                         <outlet property="deleteButton" destination="VFo-7K-AiZ" id="gbt-K6-Euw"/>
                         <outlet property="gpsRemindTittleLab" destination="gGJ-vc-fDg" id="B0K-hv-ogS"/>
                         <outlet property="gpsSpeedLab" destination="ZlY-Hu-DHg" id="zpo-EH-8lA"/>
+                        <outlet property="gpsSwitchButton" destination="FOa-Za-6h8" id="pkE-HD-jlV"/>
                         <outlet property="mapView" destination="3ri-W7-Xea" id="JV1-Y8-RZY"/>
                         <outlet property="navRemindCell" destination="xPl-cS-l2D" id="Myy-Bw-d4a"/>
                         <outlet property="navRemindContentLab" destination="mis-d0-yQE" id="q96-pg-NwH"/>
