@@ -19,7 +19,7 @@ class enumClass {
     func WidthState(value: WidthState) -> CGFloat {
         switch value {
         case .router:
-            return 10
+            return 9
         case .navigation:
             return 15
         }

@@ -183,6 +183,7 @@ class ViewController: UIViewController {
         switch viewState {
         case State.navigation:
             viewState = State.gps
+            polylineWidth = WidthState.router
             navigationCancel()
             mapViewReSet()
             navBtnComponentSt(false)// searchBar顯示、關閉導航提示、導航icon關閉、deleteButton功能開啟、reSetButton隱藏
@@ -201,6 +202,7 @@ class ViewController: UIViewController {
                 navigationCancel()//因為GPS慣性跟Nav慣性是同一變數因此區要清空
                 mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
                 navBtnComponentSt(true)//gpsSwitchButton隱藏
+                marketSet(lat: mapClickAnnLatVal, lng: mapClickAnnLngVal)
             } else {
                 UIApplication.shared.keyWindow?.showToast(text:"請選擇目的地")
             }
@@ -221,6 +223,7 @@ class ViewController: UIViewController {
         }
     }
     @IBAction func deleteButton(_ sender: Any) {
+        viewState = State.gps
         navigationCancel()
         mapViewReSet()
     }
