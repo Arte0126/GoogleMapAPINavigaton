@@ -77,7 +77,7 @@ class ViewController: UIViewController {
         searchControllerSet()
         mapViewSet()
         mapLocationSet()
-        SwitchBtnComponentSt(false)
+        switchBtnComponentSt(false)
     }
     override func viewDidAppear(_ animated: Bool) {
         gpsInertiaStart()
@@ -136,17 +136,12 @@ class ViewController: UIViewController {
         marker.map = self.mapViewForUI
     }
     func mapViewReSet() {
-        viewState = State.gps
         gpsSwitchButton.isHidden = false
-        gpsSwitch = false
-        gpsSwitchButton.isOn = false
         self.timerForNav.invalidate()
-        gpsRemindTittleLab.isHidden = false
         self.animateCamerSet(lat:GpsLatVal, lng:GpsLngVal, zoom:13, angle:0, Bear:0)
         mapViewForUI.clear()
         mapClickAnnLatVal = 0
         mapClickAnnLngVal = 0
-//      gpsInertiaStart()
     }
     func navigationCancel() {
         mapViewForUI.clear()
@@ -155,7 +150,7 @@ class ViewController: UIViewController {
         navPolylineCount = 0 // 第幾段距離
         navStepCount = 0
     }
-    func SwitchBtnComponentSt(_ state:Bool) {
+    func switchBtnComponentSt(_ state:Bool) {
         deleteButton.isEnabled = state
         routerButton.isEnabled = state
         navStartButton.isEnabled = state
@@ -168,46 +163,32 @@ class ViewController: UIViewController {
             searchController.searchBar.alpha = 1
         }
        
-    }
- 
-    
+    }//switchBtn 畫面狀態控制
+    func navBtnComponentSt(_ state:Bool) {
+        switch viewState {
+        case .gps,.navigation:
+            searchController.searchBar.isHidden = state
+            navRemindCell.isHidden = !state
+            arrowImage.isHidden = !state
+            deleteButton.isEnabled = !state
+            reSetButton.isHidden = !state
+            mapViewForUI.isMyLocationEnabled = !state
+            gpsRemindTittleLab.isHidden = state
+        case .router:
+            gpsSwitchButton.isHidden = state
+        }
+    }//Btn 畫面狀態控制
     //元件控制
     @IBAction func reSetButton(_ sender: Any) {
         switch viewState {
         case State.navigation:
-            mapViewForUI.isMyLocationEnabled = true
-            searchController.searchBar.isHidden = false // 開啟搜尋ＵＩ
-            navRemindCell.isHidden = true //關閉導航提示
-            arrowImage.isHidden = true //導航icon關閉
             viewState = State.gps
-            deleteButton.isEnabled = true
-            reSetButton.isHidden = true
             navigationCancel()
             mapViewReSet()
+            navBtnComponentSt(false)// searchBar顯示、關閉導航提示、導航icon關閉、deleteButton功能開啟、reSetButton隱藏
         default: break
         }
     }
-    
-    func NavBtnComponentSt(_ state:Bool) {
-        switch viewState {
-        case .navigation: break
-        case .gps:
-            if mapClickAnnLatVal != 0 {
-                gpsSwitchButton.isHidden = state
-                gpsSwitch = state
-                gpsSwitchButton.isOn = gpsSwitch
-                navigationCancel()
-                mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
-                viewState = State.router
-            } else {
-                UIApplication.shared.keyWindow?.showToast(text:"請選擇目的地")
-            }
-            break
-        case .router:
-            break
-        }
-    }
-    
     @IBAction func routerButton(_ sender: Any) {
         switch viewState {
         case State.router:
@@ -215,35 +196,26 @@ class ViewController: UIViewController {
         case State.navigation:
             UIApplication.shared.keyWindow?.showToast(text:"導航已經開始，無法規劃路徑")
         case State.gps:
-//            if mapClickAnnLatVal != 0 {
-//                gpsSwitchButton.isHidden = true
-//                gpsSwitch = true
-//                gpsSwitchButton.isOn = gpsSwitch
-//                navigationCancel()
-//                mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
-//                viewState = State.router
-//            }else {
-//                UIApplication.shared.keyWindow?.showToast(text:"請選擇目的地")
-//            }
-            NavBtnComponentSt(true)
+            if mapClickAnnLatVal != 0 {
+                viewState = State.router
+                navigationCancel()//因為GPS慣性跟Nav慣性是同一變數因此區要清空
+                mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
+                navBtnComponentSt(true)//gpsSwitchButton隱藏
+            } else {
+                UIApplication.shared.keyWindow?.showToast(text:"請選擇目的地")
+            }
         }
     }
     @IBAction func navStartButton(_ sender: Any) {
         switch viewState {
         case State.router:
+            viewState = State.navigation
             polylineWidth = WidthState.navigation
             mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)//沒再重新呼叫一次沒辦法改變紅線粗度
-            gpsRemindTittleLab.isHidden = true
-            searchController.searchBar.isHidden = true // 關掉搜尋ＵＩ
-            viewState = State.navigation
-            deleteButton.isEnabled = false // 刪除座標按鈕失效
-            reSetButton.isHidden = false  // 開啟reSet
-            navRemindCell.isHidden = false // 開啟導航提示
-            arrowImage.isHidden = false //導航icon開啟
             NavigationDataGet(myLat: GpsLatVal,myLng: GpsLngVal,annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
+            navBtnComponentSt(true)// searchBar隱藏、開啟導航提示、導航icon開啟、deleteButton功能關閉、reSetButton顯示、GPS道路名稱隱藏
         case State.navigation:
             UIApplication.shared.keyWindow?.showToast(text:"導航已經開始")
-            
         case State.gps:
             UIApplication.shared.keyWindow?.showToast(text:"請先規劃路徑")
         }
@@ -255,12 +227,11 @@ class ViewController: UIViewController {
     @IBAction func gpsSwitchButton(_ sender: Any) {
         gpsSwitch = !gpsSwitch
         if gpsSwitch == false {
-//            arrowImage.isHidden = true
             cameraSet(lat: GpsLatVal, lng: GpsLngVal, zoom: 13, angle: 0)
             self.timerForNav.invalidate()
-            SwitchBtnComponentSt(true)
+            switchBtnComponentSt(true)
         } else {
-            SwitchBtnComponentSt(false)
+            switchBtnComponentSt(false)
             gpsInertiaStart()
         }
     }
@@ -353,8 +324,7 @@ class ViewController: UIViewController {
     func yawDecide() { //偏航
         let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
         let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
-        print(lat,lng)
-        var state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, lat, lng)//GPSLocation 可能要改回 Snap 看測試狀況
+        let state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, lat, lng)//GPSLocation 可能要改回 Snap 看測試狀況
          if state == true {
              navigationCancel()
              switch viewState {
@@ -364,7 +334,6 @@ class ViewController: UIViewController {
              case .router:
                  return
              }
-            
          }
     }
     //慣性GPS func
@@ -452,7 +421,6 @@ class ViewController: UIViewController {
         }
         
     }
-    
 }
 extension ViewController:UITableViewDelegate,UITableViewDataSource { //搜尋後下拉選單畫面
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -515,7 +483,7 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         GpsLngVal = userLocation.coordinate.longitude
         var speed: CLLocationSpeedAccuracy = CLLocationSpeed()
         speed = mapLocationManager.location?.speed ?? 0 // 公尺／秒
-//        speed = 10
+        speed = 10
         GpsSpeedVal = speed
         gpsSpeedLab.text = "\(GpsSpeedVal)m/s"
         if GpsSpeedVal > 0.5{
