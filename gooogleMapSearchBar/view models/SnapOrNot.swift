@@ -30,7 +30,7 @@ class positionBox {
         return (lat,lng)
     }
     func snapPosition(_ lat:Double, _ lng:Double)  {
-        GoogleMapM<snapToRoadsData>().snapToRoadsParser(myLat: lat, myLng: lng )  {
+        GoogleMapM<SnapToRoadsData>().snapToRoadsParser(myLat: lat, myLng: lng )  {
             [weak self] snapToRoadsDataResult in
             self?.snapLat = snapToRoadsDataResult.latitude
             self?.snapLng = snapToRoadsDataResult.longitude

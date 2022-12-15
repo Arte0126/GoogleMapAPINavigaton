@@ -9,9 +9,9 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 class GoogleMapApi<T:Codable> {
-    final let googleMapApiUrl_1 = "https://maps.googleapis.com"
-    final let googleMapApiUrl_2 = "https://roads.googleapis.com"
-    func TextsearchJsonGet(keyWord:String,lat:Double,lng:Double,action: @escaping (JSON) -> ()) {
+    final let googleMapApiUrl1 = "https://maps.googleapis.com"
+    final let googleMapApiUrl2 = "https://roads.googleapis.com"
+    func textsearchJsonGet(keyWord:String,lat:Double,lng:Double,action: @escaping (JSON) -> ()) {
         let parameters: Parameters = [
             "location": "\(lat),\(lng)",
             "query": "\(keyWord)",
@@ -19,7 +19,7 @@ class GoogleMapApi<T:Codable> {
             "language": "zh- m",
             "key": "\(GoogleMapApiKey().googleMapKey)"
         ]
-        AF.request(googleMapApiUrl_1+GoogleMapApiUrl().textSearchUrl, method: .get, parameters: parameters).responseJSON { [self] response in
+        AF.request(googleMapApiUrl1+GoogleMapApiUrl().textSearchUrl, method: .get, parameters: parameters).responseJSON { [self] response in
             switch response.result {
                 case let .success(data):
                     let json = JSON(data)
@@ -35,7 +35,7 @@ class GoogleMapApi<T:Codable> {
             "mode": "driving",
             "key": "\(GoogleMapApiKey().googleMapKey)"
         ]
-        AF.request(googleMapApiUrl_1+GoogleMapApiUrl().directionsUrl, method: .get, parameters: parameters).responseJSON { [self] response in
+        AF.request(googleMapApiUrl1+GoogleMapApiUrl().directionsUrl, method: .get, parameters: parameters).responseJSON { [self] response in
             switch response.result {
                 case let .success(data):
                     let json = JSON(data)
@@ -49,7 +49,7 @@ class GoogleMapApi<T:Codable> {
             "path" : "\(myLat),\(myLng)",
             "key":  "\(GoogleMapApiKey().googleMapKey)"
         ]
-        AF.request(googleMapApiUrl_2+GoogleMapApiUrl().snapToRoadsUrl, method: .get, parameters: parameters).responseJSON { [self] response in
+        AF.request(googleMapApiUrl2+GoogleMapApiUrl().snapToRoadsUrl, method: .get, parameters: parameters).responseJSON { [self] response in
             switch response.result {
                 case let .success(data):
                     let json = JSON(data)

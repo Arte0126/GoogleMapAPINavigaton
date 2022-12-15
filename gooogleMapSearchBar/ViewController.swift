@@ -24,46 +24,47 @@ class ViewController: UIViewController {
     @IBOutlet weak var navRemindDistanceLab: UILabel!//導航－下一個提示剩餘距離
     @IBOutlet weak var navStartButton: UIButton!
     @IBOutlet weak var arrowImage: UIImageView!
-    var mapLocationManager = CLLocationManager() // GPS物件
-    var mapViewForUI: GMSMapView!//MapView畫面繼承
-    var GpsLatVal:Double = 0
-    var GpsLngVal:Double = 0
-    var GpsSpeedVal:Double = 0
-    var mapClickAnnLatVal:Double = 0
-    var mapClickAnnLngVal:Double = 0
-    let searchController = UISearchController()
-    var searchResultList:[String] = [] //searchBar返回資料（名稱）
-    var searchResultLatList:[Double] = []//searchBar返回資料（經度）
-    var searchResultLngList:[Double] = []//searchBar返回資料（緯度）
-    var path = GMSPath() //路徑規劃物件
-    var polyline = GMSPolyline() //路徑規劃物件
-    var polylinePoint:[CLLocationCoordinate2D] = []//目的地路徑（畫面）
-    var polylinePointDistanceList:[Double] = [] //polyline所有兩點距離陣列
-    var polylinePointAngleList:[Double] = [] //polyline所有兩點方向角陣列
-    var polylineSmallPointLatList:[Double] = [] //polyline所有座標切成個多點後取出所有經度組成陣列
-    var polylineSmallPointLngList:[Double] = []//polyline所有座標切成個多點後取出所有緯度組成陣列
-    var timerForNav = Timer() //慣性導航排程
-    var speedForAmount = 0.0
-    var navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
-    var navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
-    var navPolylineCount = 0 // 第幾段距離
-    var newMyLatValFromInertia:Double = 0//慣性位置Lat
-    var newMyLngValFromInertia:Double = 0//慣性位置Lng
-    var navManeuverList:[String] = []//導航提示左轉右轉List
-    var navStepsRemindList:[String] = []//導航提示完整內容List
-    var navStepsTittleList:[String] = []//導航提示路名List
-    var navStepsLatList:[Double] = []//導航提示座標Lat List
-    var navStepsLngList:[Double] = []//導航提示Lng List
-    var navStepCount = 0// 導航提示List專用陣列數
-    var navStepToInertiDistanceVal:Double = 0//到下一導航提示剩餘距離
-    var snapLat:Double = 0//道路Lat
-    var snapLng:Double = 0//道路Lng
-    var viewState = State.gps//畫面控制
-    var polylineWidth = WidthState.router//導航提示路徑紅線控制
-    var myLatList:[Double] = [] //我目前位置的
-    var myLngList:[Double] = []
-    var angleByPoint:Double = 0
-    var gpsSwitch :Bool = true
+    private var mapLocationManager = CLLocationManager() // GPS物件
+    private var mapViewForUI: GMSMapView!//MapView畫面繼承
+    private var GpsLatVal:Double = 0
+    private var GpsLngVal:Double = 0
+    private var GpsSpeedVal:Double = 0
+    private var mapClickAnnLatVal:Double = 0
+    private var mapClickAnnLngVal:Double = 0
+    private let searchController = UISearchController()
+    private var searchResultList:[String] = [] //searchBar返回資料（名稱）
+    private var searchResultLatList:[Double] = []//searchBar返回資料（經度）
+    private var searchResultLngList:[Double] = []//searchBar返回資料（緯度）
+    private var path = GMSPath() //路徑規劃物件
+    private var polyline = GMSPolyline() //路徑規劃物件
+    private var polylinePoint:[CLLocationCoordinate2D] = []//目的地路徑（畫面）
+    private var polylinePointDistanceList:[Double] = [] //polyline所有兩點距離陣列
+    private var polylinePointAngleList:[Double] = [] //polyline所有兩點方向角陣列
+    private var polylineSmallPointLatList:[Double] = [] //polyline所有座標切成個多點後取出所有經度組成陣列
+    private var polylineSmallPointLngList:[Double] = []//polyline所有座標切成個多點後取出所有緯度組成陣列
+    private var timerForNav = Timer() //慣性導航排程
+    private var speedForAmount = 0.0
+    private var navTimeCountForSmallPoint = 0 // 小點次數計算(讓畫面知道現在顯示到第幾個)
+    private var navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
+    private var navPolylineCount = 0 // 第幾段距離
+    private var newMyLatValFromInertia:Double = 0//慣性位置Lat
+    private var newMyLngValFromInertia:Double = 0//慣性位置Lng
+    private var navManeuverList:[String] = []//導航提示左轉右轉List
+    private var navStepsRemindList:[String] = []//導航提示完整內容List
+    private var navStepsTittleList:[String] = []//導航提示路名List
+    private var navStepsLatList:[Double] = []//導航提示座標Lat List
+    private var navStepsLngList:[Double] = []//導航提示Lng List
+    private var navStepCount = 0// 導航提示List專用陣列數
+    private var navStepToInertiDistanceVal:Double = 0//到下一導航提示剩餘距離
+    private var snapLat:Double = 0//道路Lat
+    private var snapLng:Double = 0//道路Lng
+    private var viewState = State.gps//畫面控制
+    private var polylineWidth = WidthState.router//導航提示路徑紅線控制
+    private var myLatList:[Double] = [] //我目前位置的
+    private var myLngList:[Double] = []
+    private var angleByPoint:Double = 0
+    private var gpsSwitch :Bool = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         reSetButton.isHidden = true
@@ -82,7 +83,6 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         gpsInertiaStart()
     }
-    
     //畫面顯示控制
     func searchControllerSet() {
         searchController.searchBar.sizeToFit()
@@ -200,7 +200,7 @@ class ViewController: UIViewController {
             if mapClickAnnLatVal != 0 {
                 viewState = State.router
                 navigationCancel()//因為GPS慣性跟Nav慣性是同一變數因此區要清空
-                mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
+                routerAndStepDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
                 navBtnComponentSt(true)//gpsSwitchButton隱藏
                 marketSet(lat: mapClickAnnLatVal, lng: mapClickAnnLngVal)
             } else {
@@ -213,8 +213,7 @@ class ViewController: UIViewController {
         case State.router:
             viewState = State.navigation
             polylineWidth = WidthState.navigation
-            mapRouteDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)//沒再重新呼叫一次沒辦法改變紅線粗度
-            NavigationDataGet(myLat: GpsLatVal,myLng: GpsLngVal,annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
+            routerAndStepDataGet(myLat: GpsLatVal,myLng: GpsLngVal,annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
             navBtnComponentSt(true)// searchBar隱藏、開啟導航提示、導航icon開啟、deleteButton功能關閉、reSetButton顯示、GPS道路名稱隱藏
         case State.navigation:
             UIApplication.shared.keyWindow?.showToast(text:"導航已經開始")
@@ -245,9 +244,15 @@ class ViewController: UIViewController {
         let polylineSmallPoint = InertiaPoint().getPolylineListForSmallPoint(polylinePoint:polylinePoint)
         polylineSmallPointLatList = polylineSmallPoint.0
         polylineSmallPointLngList = polylineSmallPoint.1
+        inertiaStart()
+    }
+    func inertiaStart() {
         if GpsSpeedVal > 0.5 {
             navigationInertiForStart()
-        } else {
+            arrowImage.alpha = 1
+        } else { //不動的時候
+            arrowImage.alpha = 0.5
+            self.timerForNav.invalidate()
             let cameraButton = GoogleMapVM().cameraPositionToBottom(polylinePointAngleList[navPolylineCount],polylineSmallPointLatList[navPolylineCount], polylineSmallPointLngList[navPolylineCount])
             animateCamerSet(lat:cameraButton.0, lng: cameraButton.1, zoom:19.5, angle:80, Bear: polylinePointAngleList[navPolylineCount])
         }
@@ -271,7 +276,7 @@ class ViewController: UIViewController {
         }
     }
     func navigationInertiForNextPoint(amount:Int){
-            stepCalculate()
+        stepCalculate()
         if navTimeCountForAngle > Int(polylinePointDistanceList[navPolylineCount]) { //
             navPolylineCount = navPolylineCount+1
             navTimeCountForAngle = 0
@@ -279,8 +284,8 @@ class ViewController: UIViewController {
         if polylineSmallPointLatList.count > amount {
             newMyLatValFromInertia = polylineSmallPointLatList[amount]
             newMyLngValFromInertia = polylineSmallPointLngList[amount]
-            let cameraButton = GoogleMapVM().cameraPositionToBottom(polylinePointAngleList[navPolylineCount],newMyLatValFromInertia, newMyLngValFromInertia)
-            animateCamerSet(lat:cameraButton.0, lng: cameraButton.1, zoom:19.5, angle:80, Bear: polylinePointAngleList[navPolylineCount])
+            let cameraBottom = GoogleMapVM().cameraPositionToBottom(polylinePointAngleList[navPolylineCount],newMyLatValFromInertia, newMyLngValFromInertia)
+            animateCamerSet(lat:cameraBottom.0, lng: cameraBottom.1, zoom:19.5, angle:80, Bear: polylinePointAngleList[navPolylineCount])
         }
     }
     func stepCalculate() {
@@ -289,8 +294,10 @@ class ViewController: UIViewController {
             navStepCount = navStepCount + 1
         }
         navRemindDistanceLab.text = "剩餘:\( String(format: "%.1f", navStepToInertiDistanceVal))公尺"
-        getNavManeuverList()
-        getNavStepsRemindList()
+        if viewState == .navigation {
+            getNavManeuverList()
+            getNavStepsRemindList()
+        }
         getNavStepsTittleList()
     }
     func getNavManeuverList() {
@@ -332,8 +339,7 @@ class ViewController: UIViewController {
              navigationCancel()
              switch viewState {
              case .gps:gpsInertiaStart()
-             case.navigation:
-                 mapRouteDataGet(myLat: GpsLatVal, myLng: GpsLngVal, annLat: mapClickAnnLatVal, annLng: mapClickAnnLngVal)
+             case.navigation:navInertiaStart()
              case .router:
                  return
              }
@@ -352,13 +358,15 @@ class ViewController: UIViewController {
         return angleByPoint
     }
     func gpsInertiaStart() {
-        arrowImage.isHidden = false
         angleByPoint = angleByPoint(lat: GpsLatVal, lng: GpsLngVal)
         let predictPoint =  GoogleMapVM().getNewPosition(lastAngle: angleByPoint, mylat: GpsLatVal, mylng: GpsLngVal, Distnace: 7000)
         let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
         let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
-        gpsInteriaDataGet(myLat: lat, myLng: lng, annLat: predictPoint.0, annLng: predictPoint.1)
-        NavigationDataGet(myLat: lat, myLng: lng, annLat: predictPoint.0, annLng: predictPoint.1)
+        routerAndStepDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:predictPoint.0 ,annLng:predictPoint.1)
+        
+    }
+    func navInertiaStart() {
+        routerAndStepDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
     }
     func stopGpsInertia() {
         self.timerForNav.invalidate()
@@ -367,7 +375,7 @@ class ViewController: UIViewController {
     }
     //Closure 呼叫API
     func textSearchDataGet(keyWord: String, lat: Double, lng: Double) {
-        GoogleMapM<textSearchData>().textSearchDataParser(keyWord: keyWord, lat: lat, lng: lng){
+        GoogleMapM<TextSearchData>().textSearchDataParser(keyWord: keyWord, lat: lat, lng: lng){
             [weak self] textSearchResult in
             self?.searchResultList = textSearchResult.searchResultList
             self?.searchResultLatList = textSearchResult.searchResultLatList
@@ -376,53 +384,54 @@ class ViewController: UIViewController {
         }
     }
     func snapToRoadsDataGet(myLat:Double,myLng:Double) {
-        GoogleMapM<snapToRoadsData>().snapToRoadsParser(myLat: myLat, myLng: myLng) { [weak self] snapToRoadsDataResult in
+        GoogleMapM<SnapToRoadsData>().snapToRoadsParser(myLat: myLat, myLng: myLng) { [weak self] snapToRoadsDataResult in
             self?.snapLat = snapToRoadsDataResult.latitude
             self?.snapLng = snapToRoadsDataResult.longitude
         }
     }
-    func mapRouteDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double) {
-        GoogleMapM<MapRouteData>().mapRouteDataParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
-            [weak self]  mapRouteDataResult in
-            for i in 0...mapRouteDataResult.points.count-1 {
-                self?.path = GMSPath(fromEncodedPath:mapRouteDataResult.points[i])!
-                self?.polyline = GMSPolyline(path: self?.path)
-                self?.polyline.strokeWidth = enumClass().WidthState(value: self!.polylineWidth)
-                self?.polyline.strokeColor = .red
-                self?.polyline.map = self?.mapViewForUI
-                self?.polylinePoint = decodePolyline(mapRouteDataResult.polylinePoint)!
-                let pathForCamera = GMSPath(fromEncodedPath: mapRouteDataResult.polylinePoint)!
-                let bounds = GMSCoordinateBounds(path:pathForCamera)
-                let camera = GMSCameraUpdate.fit(bounds, withPadding: 140)
-                self?.mapViewForUI.animate(with: camera)
+    func routerAndStepDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double){
+        GoogleMapM<RouterAndStepData>().routeAndStepDataParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
+            [weak self]  routeAndStepDataResult in
+            for i in 0...routeAndStepDataResult.points.count-1 {
+                switch self?.viewState {
+                case .gps:
+                    self?.path = GMSPath(fromEncodedPath:routeAndStepDataResult.points[i])!
+                    self?.polyline = GMSPolyline(path: self?.path)
+                    self?.polylinePoint = decodePolyline(routeAndStepDataResult.polylinePoint)!
+                    self?.navStepsLatList = routeAndStepDataResult.navStepsLatList
+                    self?.navStepsLngList = routeAndStepDataResult.navStepsLngList
+                    self?.navStepsTittleList = routeAndStepDataResult.navStepsTittleList
+                case .router:
+                    self?.path = GMSPath(fromEncodedPath:routeAndStepDataResult.points[i])!
+                    self?.polyline = GMSPolyline(path: self?.path)
+                    self?.polyline.strokeWidth = EnumClass().WidthState(value: self!.polylineWidth)
+                    self?.polyline.strokeColor = .red
+                    self?.polyline.map = self?.mapViewForUI
+                    self?.polylinePoint = decodePolyline(routeAndStepDataResult.polylinePoint)!
+                    let pathForCamera = GMSPath(fromEncodedPath: routeAndStepDataResult.polylinePoint)!
+                    let bounds = GMSCoordinateBounds(path:pathForCamera)
+                    let camera = GMSCameraUpdate.fit(bounds, withPadding: 140)
+                    self?.mapViewForUI.animate(with: camera)
+                case .navigation:
+                    self?.path = GMSPath(fromEncodedPath:routeAndStepDataResult.points[i])!
+                    self?.polyline = GMSPolyline(path: self?.path)
+                    self?.polyline.strokeWidth = EnumClass().WidthState(value: self!.polylineWidth)
+                    self?.polyline.strokeColor = .red
+                    self?.polyline.map = self?.mapViewForUI
+                    self?.polylinePoint = decodePolyline(routeAndStepDataResult.polylinePoint)!
+                    self?.navManeuverList = routeAndStepDataResult.navManeuverList
+                    self?.navStepsRemindList = routeAndStepDataResult.navStepsRemindList
+                    self?.navStepsTittleList = routeAndStepDataResult.navStepsTittleList
+                    self?.navStepsLatList = routeAndStepDataResult.navStepsLatList
+                    self?.navStepsLngList = routeAndStepDataResult.navStepsLngList
+                case .none:
+                    break
+                }
+            }
+            if self?.viewState != State.router{
+                self?.navPolyLineProcess()
             }
         }
-    }
-    func gpsInteriaDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double) {
-        GoogleMapM<MapRouteData>().mapRouteDataParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
-            [weak self]  mapRouteDataResult in
-            for i in 0...mapRouteDataResult.points.count-1 {
-                self?.path = GMSPath(fromEncodedPath:mapRouteDataResult.points[i])!
-                self?.polyline = GMSPolyline(path: self?.path)
-                self?.polylinePoint = decodePolyline(mapRouteDataResult.polylinePoint)!
-            }
-            self?.navPolyLineProcess()
-        }
-        
-    }
-    func NavigationDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double) {
-        GoogleMapM<NavigationData>().NavigationParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
-            [weak self]  navigationDataResult in
-            for i in 0...navigationDataResult.navStepsLatList.count-1 {
-                self?.navManeuverList = navigationDataResult.navManeuverList
-                self?.navStepsRemindList = navigationDataResult.navStepsRemindList
-                self?.navStepsTittleList = navigationDataResult.navStepsTittleList
-                self?.navStepsLatList = navigationDataResult.navStepsLatList
-                self?.navStepsLngList = navigationDataResult.navStepsLngList
-            }
-            self?.navPolyLineProcess()
-        }
-        
     }
 }
 extension ViewController:UITableViewDelegate,UITableViewDataSource { //搜尋後下拉選單畫面
@@ -486,16 +495,18 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         GpsLngVal = userLocation.coordinate.longitude
         var speed: CLLocationSpeedAccuracy = CLLocationSpeed()
         speed = mapLocationManager.location?.speed ?? 0 // 公尺／秒
-        speed = 10
+//        speed = 10
         GpsSpeedVal = speed
-        gpsSpeedLab.text = "\(GpsSpeedVal)m/s"
+        gpsSpeedLab.text = "\(Int(GpsSpeedVal*3.6))km/hr"
         if GpsSpeedVal > 0.5{
             if viewState == State.navigation { //偏航判斷
-    //            snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)//snap
+    //          snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)//snap
+                inertiaStart()//速度更新時排成也更新、速度為零0.5以下時相機視角設定
                 yawDecide()
             }
             if viewState == State.gps {
                 if gpsSwitch == true {
+                    inertiaStart()
                     yawDecide()
                 }
             }

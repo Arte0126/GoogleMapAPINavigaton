@@ -275,6 +275,7 @@
 			buildConfigurationList = CAA7C06C2924629900E92608 /* Build configuration list for PBXNativeTarget "GoogleMapAPINavigation" */;
 			buildPhases = (
 				88749CA7EFB34609FF425EE9 /* [CP] Check Pods Manifest.lock */,
+				CA9458802949D2DD006D49CF /* ShellScript */,
 				CAA7C03E2924629700E92608 /* Sources */,
 				CAA7C03F2924629700E92608 /* Frameworks */,
 				CAA7C0402924629700E92608 /* Resources */,
@@ -520,6 +521,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-gooogleMapSearchBar/Pods-gooogleMapSearchBar-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		CA9458802949D2DD006D49CF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#export PATH=/opt/homebrew/bin:$PATH\n\n#if which swiftlint >/dev/null; then\n#`which swiftlint`\n#else\n  #echo \"warning: SwiftLint not installed, download from #https://github.com/realm/SwiftLint\"\n#fi\n\n#if which swiftformat >/dev/null; then\n#  `which swiftformat` .\n#else\n#  echo \"warning: SwiftFormat not installed.\"\n#fi\n";
 		};
 		E44E5575F8A7B9FF3CC152CE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
