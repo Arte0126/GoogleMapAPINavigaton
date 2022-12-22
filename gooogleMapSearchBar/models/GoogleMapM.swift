@@ -65,6 +65,7 @@ class GoogleMapM<T:Codable> {
                 let navStepsTittleVal = NavWorldSplit().navStepsTittleProcess(navStepsRemindData: navStepsRemindData)
                 navStepsTittleList.append(navStepsTittleVal)
             })
+            navStepsTittleList = NavWorldSplit().listValueFix(navStepsTittleList)
             action(RouterAndStepData.init(navStepsRemindList: navStepsRemindDataList, navStepsTittleList: navStepsTittleList, navManeuverList: navManeuverList, navStepsLatList: navStepsLatList, navStepsLngList: navStepsLngList,points: pointsDataList,polylinePoint: polylinePoint ?? "") as! T)
         }
     }
@@ -113,7 +114,7 @@ class GoogleMapM<T:Codable> {
                 let navStepsRemindData = stepsData["html_instructions"].stringValue
                 let navStepsRemindVal = NavWorldSplit().navStepsRemindProcess(navStepsRemindData: navStepsRemindData)
                 navStepsRemindDataList.append(navStepsRemindVal)
-                let navStepsTittleVal = NavWorldSplit().navStepsTittleProcess(navStepsRemindData: navStepsRemindData)
+                var navStepsTittleVal = NavWorldSplit().navStepsTittleProcess(navStepsRemindData: navStepsRemindData)
                 navStepsTittleList.append(navStepsTittleVal)
             })
             action(NavigationData.init(navStepsRemindList: navStepsRemindDataList, navStepsTittleList: navStepsTittleList, navManeuverList: navManeuverList, navStepsLatList: navStepsLatList, navStepsLngList: navStepsLngList) as! T)

@@ -149,6 +149,19 @@ class ViewController: UIViewController {
         navTimeCountForAngle = 0 // 小點次數計算（拿來跟polylinePointDistanceList[navPolylineCount]比，要歸零）
         navPolylineCount = 0 // 第幾段距離
         navStepCount = 1
+        
+        
+        polylinePointAngleList = []
+        polylinePointDistanceList = []
+//        let polylineSmallPoint = []
+        polylineSmallPointLatList = []
+        polylineSmallPointLngList = []
+        navManeuverList = []
+        navStepsLatList = []
+        navStepsLngList = []
+        navStepsRemindList = []
+        navStepsTittleList = []
+        
     }
     func switchBtnComponentSt(_ state:Bool) {
         deleteButton.isEnabled = state
@@ -216,7 +229,10 @@ class ViewController: UIViewController {
             routerAndStepDataGet(myLat: GpsLatVal,myLng: GpsLngVal,annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
             navBtnComponentSt(true)// searchBar隱藏、開啟導航提示、導航icon開啟、deleteButton功能關閉、reSetButton顯示、GPS道路名稱隱藏
         case State.navigation:
-            UIApplication.shared.keyWindow?.showToast(text:"導航已經開始")
+//            GpsLatVal = newMyLatValFromInertia
+//            GpsLngVal = newMyLngValFromInertia
+            yawDecide()
+            UIApplication.shared.keyWindow?.showToast(text:"導航已經開始(強制偏航)")
         case State.gps:
             UIApplication.shared.keyWindow?.showToast(text:"請先規劃路徑")
         }
@@ -251,7 +267,7 @@ class ViewController: UIViewController {
         inertiaStart()
     }
     func inertiaStart() {
-        if GpsSpeedVal > 0.5 {
+        if GpsSpeedVal > 0 {
             navigationInertiForStart()
             arrowImage.alpha = 1
         } else { //不動的時候
@@ -277,7 +293,9 @@ class ViewController: UIViewController {
             switch(viewState) {
             case .navigation:
                 if navTimeCountForSmallPoint > polylineSmallPointLatList.count {
-                    navFinish()
+                    if navStepCount == navStepsLatList.count-1 {
+                        navFinish()
+                    }
                 } else {
                     if polylinePointDistanceList.count >  0 {
                     navigationInertiForNextPoint(amount: amount)
@@ -374,14 +392,17 @@ class ViewController: UIViewController {
     func yawDecide() { //偏航
         let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
         let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
-        let state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, lat, lng)//GPSLocation 可能要改回 Snap 看測試狀況
+        var state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, lat, lng)//GPSLocation 可能要改回 Snap 看測試狀況
+//        let state = YawAlgorithm().YawAlgorithm1(newMyLatValFromInertia, newMyLngValFromInertia, GpsLatVal, GpsLngVal)
+//        GpsLatVal = newMyLatValFromInertia
+//        GpsLngVal = newMyLngValFromInertia
+//        state = true
          if state == true {
              navigationCancel()
              switch viewState {
-             case .gps:gpsInertiaStart()
-             case.navigation:navInertiaStart()
-             case .router:
-                 return
+             case .gps: gpsInertiaStart()
+             case.navigation: navInertiaStart()
+             case .router: return
              }
          }
     }
@@ -400,10 +421,9 @@ class ViewController: UIViewController {
     func gpsInertiaStart() {
         angleByPoint = angleByPoint(lat: GpsLatVal, lng: GpsLngVal)
         let predictPoint =  GoogleMapVM().getNewPosition(lastAngle: angleByPoint, mylat: GpsLatVal, mylng: GpsLngVal, Distnace: 7000)
-        let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
-        let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
+//        let lat = positionBox().switchBox(GpsLatVal, GpsLngVal).0
+//        let lng = positionBox().switchBox(GpsLatVal, GpsLngVal).1
         routerAndStepDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:predictPoint.0 ,annLng:predictPoint.1)
-        
     }
     func navInertiaStart() {
         routerAndStepDataGet(myLat:GpsLatVal, myLng:GpsLngVal, annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
@@ -430,6 +450,7 @@ class ViewController: UIViewController {
         }
     }
     func routerAndStepDataGet(myLat: Double,myLng: Double,annLat:Double ,annLng:Double){
+        print("inini")
         GoogleMapM<RouterAndStepData>().routeAndStepDataParser(myLat: myLat,myLng: myLng,annLat:annLat ,annLng:annLng) {
             [weak self]  routeAndStepDataResult in
             for i in 0...routeAndStepDataResult.points.count-1 {
@@ -468,6 +489,8 @@ class ViewController: UIViewController {
                     break
                 }
             }
+//            print("\(self?.navStepsTittleList)")
+//            print("\(self?.navStepsRemindList)")
             if self?.viewState != State.router{
                 self?.navPolyLineProcess()
             }
@@ -535,19 +558,20 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         GpsLngVal = userLocation.coordinate.longitude
         var speed: CLLocationSpeedAccuracy = CLLocationSpeed()
         speed = mapLocationManager.location?.speed ?? 0 // 公尺／秒
-        speed = 10
+//        speed = 20
         GpsSpeedVal = speed
         gpsSpeedLab.text = "\(Int(GpsSpeedVal*3.6))km/hr"
-        if GpsSpeedVal > 0.5{
+        marketSet(lat: GpsLatVal, lng: GpsLngVal)
+        if GpsSpeedVal > 0{
             if viewState == State.navigation { //偏航判斷
     //          snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)//snap
                 inertiaStart()//速度更新時排成也更新、速度為零0.5以下時相機視角設定
-//                yawDecide()
+                yawDecide()
             }
             if viewState == State.gps {
                 if gpsSwitch == true {
                     inertiaStart()
-//                    yawDecide()
+                    yawDecide()
                 }
             }
         }

@@ -25,12 +25,27 @@ class NavWorldSplit {
         for i in 0...itemsArray.count-1 {
             if itemsArray[i].hasSuffix("街") {
                 navStepsTittleVal = itemsArray[i]
+                break
             }
             if itemsArray[i].hasSuffix("路") {
                 navStepsTittleVal = itemsArray[i]
+                break
             }
         }
-      
         return navStepsTittleVal
+    }
+    func listValueFix(_ navStepsTittleList:[String]) -> [String] {
+        var fixResult:[String] = []
+        for i in 0..<navStepsTittleList.count {
+            var listVal:String = ""
+            listVal = navStepsTittleList[i]
+            if i != navStepsTittleList.count-1 {
+                if listVal == "" {
+                    listVal = navStepsTittleList[i+1]
+                }
+            }
+            fixResult.append(listVal)
+        }
+        return fixResult
     }
 }
