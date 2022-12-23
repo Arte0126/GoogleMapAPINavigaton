@@ -208,6 +208,8 @@ class ViewController: UIViewController {
         case State.router:
             UIApplication.shared.keyWindow?.showToast(text:"路徑已經規劃")
         case State.navigation:
+//            GpsSpeedVal = 0
+//            timerForNav?.invalidate()
             UIApplication.shared.keyWindow?.showToast(text:"導航已經開始，無法規劃路徑")
         case State.gps:
             if mapClickAnnLatVal != 0 {
@@ -229,10 +231,10 @@ class ViewController: UIViewController {
             routerAndStepDataGet(myLat: GpsLatVal,myLng: GpsLngVal,annLat:mapClickAnnLatVal ,annLng:mapClickAnnLngVal)
             navBtnComponentSt(true)// searchBar隱藏、開啟導航提示、導航icon開啟、deleteButton功能關閉、reSetButton顯示、GPS道路名稱隱藏
         case State.navigation:
-//            GpsLatVal = newMyLatValFromInertia
-//            GpsLngVal = newMyLngValFromInertia
-            yawDecide()
-            UIApplication.shared.keyWindow?.showToast(text:"導航已經開始(強制偏航)")
+//            yawDecide()
+//            GpsSpeedVal = 10
+//            inertiaStart()
+            UIApplication.shared.keyWindow?.showToast(text:"導航已經開始")
         case State.gps:
             UIApplication.shared.keyWindow?.showToast(text:"請先規劃路徑")
         }
@@ -566,14 +568,16 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
             if viewState == State.navigation { //偏航判斷
     //          snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)//snap
                 inertiaStart()//速度更新時排成也更新、速度為零0.5以下時相機視角設定
-                yawDecide()
+//                yawDecide()
             }
             if viewState == State.gps {
                 if gpsSwitch == true {
                     inertiaStart()
-                    yawDecide()
+//                    yawDecide()
                 }
             }
+        } else {
+            timerForNav?.invalidate()
         }
        
     }
