@@ -273,14 +273,12 @@ class ViewController: UIViewController {
             navigationInertiForStart()
             arrowImage.alpha = 1
         } else { //不動的時候
-            
             arrowImage.alpha = 0.5
             self.timerForNav?.invalidate()
             if polylinePointAngleList.count > navPolylineCount {
                 let cameraButton = GoogleMapVM().cameraPositionToBottom(polylinePointAngleList[navPolylineCount],polylineSmallPointLatList[navPolylineCount], polylineSmallPointLngList[navPolylineCount])
                 animateCamerSet(lat:cameraButton.0, lng: cameraButton.1, zoom:19.5, angle:80, Bear: polylinePointAngleList[navPolylineCount])
             }
-            
         }
     }
     func navigationInertiForStart() {
@@ -568,7 +566,6 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
         GpsSpeedVal = speed
         gpsSpeedLab.text = "\(Int(GpsSpeedVal*3.6))km/hr"
         marketSet(lat: GpsLatVal, lng: GpsLngVal)
-//        if GpsSpeedVal > 0{
             if viewState == State.navigation { //偏航判斷
     //          snapToRoadsDataGet(myLat: GpsLatVal, myLng: GpsLngVal)//snap
                 inertiaStart()//速度更新時排成也更新、速度為零0.5以下時相機視角設定
@@ -580,10 +577,6 @@ extension ViewController: CLLocationManagerDelegate { // 目前位置與速度
                     yawDecide()
                 }
             }
-//        } else {
-//            timerForNav?.invalidate()
-//        }
-       
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
